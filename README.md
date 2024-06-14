@@ -62,8 +62,8 @@ Execute the following commands from the `build` directory created during compila
 ```sh
 # Benchmark Asterisk MPC.
 #
-# The command below should be run on four different terminals with $PID set to
-# 0, 1, 2, and 3 i.e., one instance corresponding to each party.
+# The command below should be run on n+1 different terminals with $PID set to
+# 0, 1, 2, upto n i.e., one instance corresponding to each party.
 #
 # The number of threads can be set using the '-t' option. '-g' denotes the 
 # number of gates at each level, '-d' denotes the depth of the circuit and '-n'
