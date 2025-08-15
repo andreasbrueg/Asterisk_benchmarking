@@ -223,8 +223,7 @@ bpo::options_description programOptions() {
 // clang-format on
 
 int main(int argc, char* argv[]) {
-    // ZZ_p::init(conv<ZZ>("1099511627689")); // 40 bit prime, still represented using 64 bits :(
-    ZZ_p::init(conv<ZZ>("4294967291")); // 32 bit prime, insecure, but fairer comparison
+    ZZ_p::init(conv<ZZ>("1099511627689")); // 40 bit prime
     auto prog_opts(programOptions());
 
     bpo::options_description cmdline(
