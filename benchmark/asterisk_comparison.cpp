@@ -124,7 +124,7 @@ void benchmark(const bpo::variables_map& opts) {
     std::cout << "--- Circuit ---\n";
     std::cout << circ << std::endl;
 
-    
+
     std::unordered_map<common::utils::wire_t, int> input_pid_map;
     std::unordered_map<common::utils::wire_t, Field> input_map;
     for (const auto& g : circ.gates_by_level[0]) {
@@ -223,7 +223,7 @@ bpo::options_description programOptions() {
 // clang-format on
 
 int main(int argc, char* argv[]) {
-    ZZ_p::init(conv<ZZ>("17816577890427308801"));
+    ZZ_p::init(conv<ZZ>("1099511627689"));
     auto prog_opts(programOptions());
 
     bpo::options_description cmdline(
