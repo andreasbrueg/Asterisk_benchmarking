@@ -62,13 +62,13 @@ BOOST_AUTO_TEST_CASE(random_share) {
         key = 0;
         keySh[0] = 0;
         for(int j = 1; j <= nP; j++) {
-            randomizeZZp(vrgen.pi(j), keySh[j], sizeof(Field));
+            randomizeZZp(vrgen.pi(j), keySh[j], FIELDSIZE);
             key += keySh[j];
         }
       
       }
       else {
-        randomizeZZp(vrgen.p0(), key, sizeof(Field));
+        randomizeZZp(vrgen.p0(), key, FIELDSIZE);
       }
 
       auto network = std::make_shared<io::NetIOMP>(i, nP+1, 10000, nullptr, true);
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE(random_share) {
         if(i == 0) {
           size_t rand_sh_num = rand_sh.size();
           network->send(nP, &rand_sh_num, sizeof(size_t));
-          network->send(nP, rand_sh.data(), sizeof(Field) * rand_sh_num);
+          network->send(nP, rand_sh.data(), FIELDSIZE * rand_sh_num);
         }
       }
       else {
@@ -86,7 +86,7 @@ BOOST_AUTO_TEST_CASE(random_share) {
         
         network->recv(0, &rand_sh_num, sizeof(size_t));
         rand_sh.resize(rand_sh_num);
-        network->recv(0, rand_sh.data(), sizeof(Field) * rand_sh_num);
+        network->recv(0, rand_sh.data(), FIELDSIZE * rand_sh_num);
         OfflineEvaluator::randomShare(nP, i, vrgen, *network, 
                                   shares, tpshares, key, keySh, rand_sh, idx);
       }

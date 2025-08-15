@@ -108,7 +108,7 @@ void benchmark(const bpo::variables_map& opts) {
                                 {"security_param", security_param},
                                 {"threads", threads},
                                 {"seed", seed},
-                                {"field_elem_representation_size_bytes", sizeof(Field)},
+                                {"field_elem_representation_size_bytes", FIELDSIZE},
                                 {"repeat", repeat}};
     // CHANGES: Separately save benchmark setup data
     output_data["benchmarks_setup"] = json::array();

@@ -30,12 +30,12 @@ namespace assistedMPC {
             key = 0;
             keySh[0] = 0;
             for(int i = 1; i <= nP; i++) {
-                randomizeZZp(rgen.pi(i), keySh[i], sizeof(Field));
+                randomizeZZp(rgen.pi(i), keySh[i], FIELDSIZE);
                 key += keySh[i];
             }
         }
         else {
-            randomizeZZp(rgen.p0(), key, sizeof(Field));
+            randomizeZZp(rgen.p0(), key, FIELDSIZE);
         }
     }
 
@@ -46,7 +46,7 @@ namespace assistedMPC {
             Field key, std::vector<Field> keySh, std::vector<std::vector<Field>>& rand_sh) {
 
         Field secret = Field(0);
-        randomizeZZp(rgen.self(), secret, sizeof(Field));
+        randomizeZZp(rgen.self(), secret, FIELDSIZE);
         randomShareSecret_Helper(nP, rgen, share, tpShare, secret, key, keySh, rand_sh);
     }
 
@@ -79,11 +79,11 @@ namespace assistedMPC {
         tpShare.setKeySh(keySh[0]);
         tpShare.setKey(key);
         for(int i = 1; i < nP; i++) {
-            randomizeZZp(rgen.self(), val, sizeof(Field));
+            randomizeZZp(rgen.self(), val, FIELDSIZE);
             tpShare.pushValues(val);
             rand_sh_sec[i-1].push_back(val);
             valn += val;
-            randomizeZZp(rgen.self(), tag, sizeof(Field));
+            randomizeZZp(rgen.self(), tag, FIELDSIZE);
             tpShare.pushTags(tag);
             rand_sh_sec[i-1].push_back(tag);
             tagn += tag;
@@ -110,7 +110,7 @@ namespace assistedMPC {
             std::vector<Field> keySh, std::vector<std::vector<Field>>& rand_sh_party) {
 
         Field secret = Field(0);
-        randomizeZZp(rgen.self(), secret, sizeof(Field));
+        randomizeZZp(rgen.self(), secret, FIELDSIZE);
         randomShareSecret_Helper(nP, rgen, share, tpShare, secret, key, keySh, rand_sh_party);
         rand_sh_party[dealer-1].push_back(secret);
 
@@ -144,13 +144,13 @@ namespace assistedMPC {
             key = 0;
             keySh[0] = 0;
             for(int i = 1; i <= nP_; i++) {
-                randomizeZZp(rgen_.pi(i), keySh[i], sizeof(Field));
+                randomizeZZp(rgen_.pi(i), keySh[i], FIELDSIZE);
                 key += keySh[i];
             }
             key_sh_ = key;
         }
         else {
-            randomizeZZp(rgen_.p0(), key, sizeof(Field));
+            randomizeZZp(rgen_.p0(), key, FIELDSIZE);
             key_sh_ = key;
         }
 
@@ -337,13 +337,13 @@ namespace assistedMPC {
             key = 0;
             keySh[0] = 0;
             for(int i = 1; i <= nP_; i++) {
-                randomizeZZp(rgen_.pi(i), keySh[i], sizeof(Field));
+                randomizeZZp(rgen_.pi(i), keySh[i], FIELDSIZE);
                 key += keySh[i];
             }
             key_sh_ = key;
         }
         else {
-            randomizeZZp(rgen_.p0(), key, sizeof(Field));
+            randomizeZZp(rgen_.p0(), key, FIELDSIZE);
             key_sh_ = key;
         }
 
@@ -560,7 +560,7 @@ namespace assistedMPC {
                 for(size_t i = 0; i < b_rand_sh_party_num; i++) {
                     offline_bool_comm[b_rand_sh_sec_num + b_rand_sh_num + i] = b_rand_sh_party[p-1][i];
                 }
-                network_->send(p, offline_arith_comm.data(), sizeof(Field) * arith_comm);
+                network_->send(p, offline_arith_comm.data(), FIELDSIZE * arith_comm);
                 network_->send(p, offline_bool_comm.data(), sizeof(BoolRing) * bool_comm);
             }
         }
@@ -588,7 +588,7 @@ namespace assistedMPC {
             std::vector<Field> offline_arith_comm(arith_comm);
             std::vector<BoolRing> offline_bool_comm(bool_comm);
 
-            network_->recv(0, offline_arith_comm.data(), sizeof(Field) * arith_comm);
+            network_->recv(0, offline_arith_comm.data(), FIELDSIZE * arith_comm);
             network_->recv(0, offline_bool_comm.data(), sizeof(BoolRing) * bool_comm);
 
             rand_sh.resize(rand_sh_num);

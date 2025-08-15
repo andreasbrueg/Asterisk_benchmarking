@@ -60,12 +60,12 @@ BOOST_AUTO_TEST_CASE(random_share) {
         key = 0;
         keySh[0] = 0;
         for(int j = 1; j <= nP; j++) {
-            randomizeZZp(vrgen.pi(j), keySh[j], sizeof(Field));
+            randomizeZZp(vrgen.pi(j), keySh[j], FIELDSIZE);
             key += keySh[j];
         }
       }
       else {
-        randomizeZZp(vrgen.p0(), key, sizeof(Field));
+        randomizeZZp(vrgen.p0(), key, FIELDSIZE);
       }
       auto network = std::make_shared<io::NetIOMP>(i, nP+1, 10000, nullptr, true);
       if(i == 0) { 
@@ -74,14 +74,14 @@ BOOST_AUTO_TEST_CASE(random_share) {
         size_t rand_sh_num = rand_sh[1].size();
         for(size_t j = 1; j <= nP; j++) {
             network->send(j, &rand_sh_num, sizeof(size_t));
-            network->send(j, rand_sh[j-1].data(), sizeof(Field) * rand_sh_num);
+            network->send(j, rand_sh[j-1].data(), FIELDSIZE * rand_sh_num);
         }
       }
       else {
         size_t rand_sh_num;
         network->recv(0, &rand_sh_num, sizeof(size_t));
         std::vector<Field> rand_sh(rand_sh_num);
-        network->recv(0, rand_sh.data(), sizeof(Field) * rand_sh_num);
+        network->recv(0, rand_sh.data(), FIELDSIZE * rand_sh_num);
         OfflineEvaluator::randomShare_Party(shares, key, rand_sh, idx);
       }
 
@@ -119,30 +119,30 @@ BOOST_AUTO_TEST_CASE(random_share_secret) {
         key = 0;
         keySh[0] = 0;
         for(int j = 1; j <= nP; j++) {
-            randomizeZZp(vrgen.pi(j), keySh[j], sizeof(Field));
+            randomizeZZp(vrgen.pi(j), keySh[j], FIELDSIZE);
             key += keySh[j];
         }
       }
       else {
-        randomizeZZp(vrgen.p0(), key, sizeof(Field));
+        randomizeZZp(vrgen.p0(), key, FIELDSIZE);
       }
       auto network = std::make_shared<io::NetIOMP>(i, nP+1, 10000, nullptr, true);
       if(i == 0) { 
         Field secret;
-        randomizeZZp(vrgen.self(), secret, sizeof(Field));
+        randomizeZZp(vrgen.self(), secret, FIELDSIZE);
         std::vector<std::vector<Field>> rand_sh_sec(nP + 1);
         OfflineEvaluator::randomShareSecret_Helper(nP, vrgen, shares, tpshares, secret, key, keySh, rand_sh_sec);
         size_t rand_sh_sec_num = rand_sh_sec[1].size();
         for(size_t j = 1; j <= nP; j++) {
             network->send(j, &rand_sh_sec_num, sizeof(size_t));
-            network->send(j, rand_sh_sec[j-1].data(), sizeof(Field) * rand_sh_sec_num);
+            network->send(j, rand_sh_sec[j-1].data(), FIELDSIZE * rand_sh_sec_num);
         }
       }
       else {
         size_t rand_sh_sec_num;
         network->recv(0, &rand_sh_sec_num, sizeof(size_t));
         std::vector<Field> rand_sh_sec(rand_sh_sec_num);
-        network->recv(0, rand_sh_sec.data(), sizeof(Field) * rand_sh_sec_num);
+        network->recv(0, rand_sh_sec.data(), FIELDSIZE * rand_sh_sec_num);
         OfflineEvaluator::randomShare_Party(shares, key, rand_sh_sec, idx);
       }
 
@@ -180,12 +180,12 @@ BOOST_AUTO_TEST_CASE(random_share_party) {
         key = 0;
         keySh[0] = 0;
         for(int j = 1; j <= nP; j++) {
-            randomizeZZp(vrgen.pi(j), keySh[j], sizeof(Field));
+            randomizeZZp(vrgen.pi(j), keySh[j], FIELDSIZE);
             key += keySh[j];
         }
       }
       else {
-        randomizeZZp(vrgen.p0(), key, sizeof(Field));
+        randomizeZZp(vrgen.p0(), key, FIELDSIZE);
       }
       auto network = std::make_shared<io::NetIOMP>(i, nP+1, 10000, nullptr, true);
       if(i == 0) { 
@@ -194,7 +194,7 @@ BOOST_AUTO_TEST_CASE(random_share_party) {
         for(size_t j = 1; j <= nP; j++) {
           size_t rand_sh_party_num = rand_sh_party[j - 1].size();
             network->send(j, &rand_sh_party_num, sizeof(size_t));
-            network->send(j, rand_sh_party[j-1].data(), sizeof(Field) * rand_sh_party_num);
+            network->send(j, rand_sh_party[j-1].data(), FIELDSIZE * rand_sh_party_num);
         }
       }
       else {
@@ -202,7 +202,7 @@ BOOST_AUTO_TEST_CASE(random_share_party) {
         size_t rand_sh_party_num;
         network->recv(0, &rand_sh_party_num, sizeof(size_t));
         std::vector<Field> rand_sh_party(rand_sh_party_num);
-        network->recv(0, rand_sh_party.data(), sizeof(Field) * rand_sh_party_num);
+        network->recv(0, rand_sh_party.data(), FIELDSIZE * rand_sh_party_num);
         if(i == dealer) {
           Field secret;
           OfflineEvaluator::randomShareWithParty_Dealer(secret, shares, key, rand_sh_party, idx);

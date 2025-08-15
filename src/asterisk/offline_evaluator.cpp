@@ -31,12 +31,12 @@ void OfflineEvaluator::keyGen(int nP, int pid, RandGenPool& rgen,
     key = 0;
     keySh[0] = 0;
     for(int i = 1; i <= nP; i++) {
-        randomizeZZp(rgen.pi(i), keySh[i], sizeof(Field));
+        randomizeZZp(rgen.pi(i), keySh[i], FIELDSIZE);
         key += keySh[i];
     }
   }
   else {
-    randomizeZZp(rgen.p0(), key, sizeof(Field));
+    randomizeZZp(rgen.p0(), key, FIELDSIZE);
   }
 }
 
@@ -69,10 +69,10 @@ void OfflineEvaluator::randomShare(int nP, int pid, RandGenPool& rgen, io::NetIO
       
       for(int i = 1; i <= nP; i++) {
 
-        randomizeZZp(rgen.pi(i), val, sizeof(Field));
+        randomizeZZp(rgen.pi(i), val, FIELDSIZE);
         tpShare.pushValues(val);
         tpShare.setKeySh(keySh[i]);
-        randomizeZZp(rgen.pi(i), tag, sizeof(Field));
+        randomizeZZp(rgen.pi(i), tag, FIELDSIZE);
         if( i != nP) {
           tpShare.pushTags(tag);
           tagn += tag;
@@ -88,10 +88,10 @@ void OfflineEvaluator::randomShare(int nP, int pid, RandGenPool& rgen, io::NetIO
     }
     else if(pid > 0) {
       share.setKey(key);
-      randomizeZZp(rgen.p0(), val, sizeof(Field));
+      randomizeZZp(rgen.p0(), val, FIELDSIZE);
       share.pushValue(val);
       
-      randomizeZZp(rgen.p0(), tag, sizeof(Field));
+      randomizeZZp(rgen.p0(), tag, FIELDSIZE);
       
       if( pid != nP) {
         share.pushTag(tag);
@@ -126,10 +126,10 @@ void OfflineEvaluator::randomShareSecret(int nP, int pid, RandGenPool& rgen, io:
       tpShare.setKeySh(keySh[0]);
       tpShare.setKey(key);
       for(int i = 1; i < nP; i++) {
-        randomizeZZp(rgen.pi(i), val, sizeof(Field));
+        randomizeZZp(rgen.pi(i), val, FIELDSIZE);
         tpShare.pushValues(val);
         valn += val;
-        randomizeZZp(rgen.pi(i), tag, sizeof(Field));
+        randomizeZZp(rgen.pi(i), tag, FIELDSIZE);
         tpShare.pushTags(tag);
         tagn += tag;
         tpShare.setKeySh(keySh[i]);
@@ -145,9 +145,9 @@ void OfflineEvaluator::randomShareSecret(int nP, int pid, RandGenPool& rgen, io:
     else if(pid > 0) {
       share.setKey(key);
       if( pid != nP) {
-        randomizeZZp(rgen.p0(), val, sizeof(Field));
+        randomizeZZp(rgen.p0(), val, FIELDSIZE);
         share.pushValue(val);
-        randomizeZZp(rgen.p0(), tag, sizeof(Field));
+        randomizeZZp(rgen.p0(), tag, FIELDSIZE);
         share.pushTag(tag);
       }
       else if(pid == nP) {
@@ -177,10 +177,10 @@ void OfflineEvaluator::randomShareWithParty(int nP, int pid, int dealer, RandGen
   Field tagn = Field(0);
   if( pid == 0) {
     if(dealer != 0) {
-      randomizeZZp(rgen.pi(dealer), secret, sizeof(Field));
+      randomizeZZp(rgen.pi(dealer), secret, FIELDSIZE);
     }
     else {
-      randomizeZZp(rgen.self(), secret, sizeof(Field));
+      randomizeZZp(rgen.self(), secret, FIELDSIZE);
     }
     
     share.pushValue(Field(0));
@@ -194,10 +194,10 @@ void OfflineEvaluator::randomShareWithParty(int nP, int pid, int dealer, RandGen
     tagF = key * secret;
     for(int i = 1; i < nP; i++) {
       tpShare.setKeySh(keySh[i]);
-      randomizeZZp(rgen.pi(i), val, sizeof(Field));
+      randomizeZZp(rgen.pi(i), val, FIELDSIZE);
       
       tpShare.pushValues(val);
-      randomizeZZp(rgen.pi(i), tag, sizeof(Field));
+      randomizeZZp(rgen.pi(i), tag, FIELDSIZE);
       
       tpShare.pushTags(tag);
       valn += val;
@@ -215,12 +215,12 @@ void OfflineEvaluator::randomShareWithParty(int nP, int pid, int dealer, RandGen
   else if ( pid > 0) {
     share.setKey(key);
     if(pid == dealer) {
-      randomizeZZp(rgen.p0(), secret, sizeof(Field));
+      randomizeZZp(rgen.p0(), secret, FIELDSIZE);
     }
     if(pid != nP) {
-      randomizeZZp(rgen.p0(), val, sizeof(Field));
+      randomizeZZp(rgen.p0(), val, FIELDSIZE);
       share.pushValue(val);
-      randomizeZZp(rgen.p0(), tag, sizeof(Field)); 
+      randomizeZZp(rgen.p0(), tag, FIELDSIZE); 
       share.pushTag(tag);
     }
     else if (pid == nP) {
@@ -259,13 +259,13 @@ void OfflineEvaluator::setWireMasksParty(
         key = 0;
         keySh[0] = 0;
         for(int i = 1; i <= nP_; i++) {
-            randomizeZZp(rgen_.pi(i), keySh[i], sizeof(Field));
+            randomizeZZp(rgen_.pi(i), keySh[i], FIELDSIZE);
             key += keySh[i];
         }
         key_sh_ = key;
       }
       else {
-        randomizeZZp(rgen_.p0(), key, sizeof(Field));
+        randomizeZZp(rgen_.p0(), key, FIELDSIZE);
         key_sh_ = key;
       }
 
@@ -581,7 +581,7 @@ void OfflineEvaluator::setWireMasksParty(
           
           // padded_val = r - delta_x, sampled by all the parties together
           Field padded_val;
-          randomizeZZp(rgen_.all(), padded_val, sizeof(Field));
+          randomizeZZp(rgen_.all(), padded_val, FIELDSIZE);
 
           // TP obtains $r = padded_val + delta_x
           Field r_value = Field(0);
@@ -767,7 +767,7 @@ void OfflineEvaluator::setWireMasksParty(
           const auto* ltz_g = static_cast<common::utils::FIn1Gate*>(gate.get());
           // padded_val
           Field padded_val;
-          randomizeZZp(rgen_.all(), padded_val, sizeof(Field));
+          randomizeZZp(rgen_.all(), padded_val, FIELDSIZE);
 
           // TP obtains $r = padded_val + delta_x
           // TP bit decomposes r and shares it's bits
@@ -1181,7 +1181,7 @@ void OfflineEvaluator::setWireMasks(
         offline_bool_comm[b_rand_sh_sec_num + b_rand_sh_num + i] = b_rand_sh_party[i];
       }
       auto net_data = BoolRing::pack(offline_bool_comm.data(), bool_comm);
-      network_->send(nP_, offline_arith_comm.data(), sizeof(Field) * arith_comm);
+      network_->send(nP_, offline_arith_comm.data(), FIELDSIZE * arith_comm);
       network_->send(nP_, net_data.data(), sizeof(uint8_t) * net_data.size());
       // network_->send(nP_, offline_bool_comm.data(), sizeof(BoolRing) * bool_comm);
     }
@@ -1202,7 +1202,7 @@ void OfflineEvaluator::setWireMasks(
 
 
     std::vector<Field> offline_arith_comm(arith_comm);
-    network_->recv(0, offline_arith_comm.data(), sizeof(Field) * arith_comm);
+    network_->recv(0, offline_arith_comm.data(), FIELDSIZE * arith_comm);
     size_t nbytes = (bool_comm + 7) / 8;
     std::vector<uint8_t> net_data(nbytes);
     network_->recv(0, net_data.data(), nbytes * sizeof(uint8_t));

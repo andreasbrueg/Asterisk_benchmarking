@@ -69,12 +69,12 @@ namespace asterisk
                                 wires_[g->out] = q_val_[g->out];
                                 continue;
                             }
-                            network_->send(i, &q_val_[g->out], sizeof(Field));
+                            network_->send(i, &q_val_[g->out], FIELDSIZE);
                         }
                     }
                     else
                     {
-                        network_->recv(pid, &q_val_[g->out], sizeof(Field));
+                        network_->recv(pid, &q_val_[g->out], FIELDSIZE);
                         wires_[g->out] = q_val_[g->out];
                     }
                 }
@@ -89,7 +89,7 @@ namespace asterisk
         {
             if (g->type == common::utils::GateType::kInp)
             {
-                randomizeZZp(rgen_.all(), wires_[g->out], sizeof(Field));
+                randomizeZZp(rgen_.all(), wires_[g->out], FIELDSIZE);
             }
         }
     }
@@ -698,7 +698,7 @@ namespace asterisk
                     {
                         online_comm_to_party[i] = online_comm_to_TP[(pid - 1) * per_party_comm + i];
                     }
-                    network_->send(pid, online_comm_to_party.data(), sizeof(Field) * per_party_comm);
+                    network_->send(pid, online_comm_to_party.data(), FIELDSIZE * per_party_comm);
                 }
                 else
                 {
@@ -707,7 +707,7 @@ namespace asterisk
                     {
                         online_comm_to_party[i] = online_comm_to_TP[(pid - 1) * per_party_comm + i];
                     }
-                    network_->send(pid, online_comm_to_party.data(), sizeof(Field) * last_party_comm);
+                    network_->send(pid, online_comm_to_party.data(), FIELDSIZE * last_party_comm);
                 }
             }
 
@@ -736,7 +736,7 @@ namespace asterisk
                 if (id_ != nP_)
                 {
                     std::vector<Field> online_comm_to_party_recv(per_party_comm);
-                    network_->recv(pid, online_comm_to_party_recv.data(), sizeof(Field) * per_party_comm);
+                    network_->recv(pid, online_comm_to_party_recv.data(), FIELDSIZE * per_party_comm);
                     for (size_t i = 0; i < per_party_comm; i++)
                     {
                         agg_values_send[i] += online_comm_to_party_recv[i];
@@ -745,7 +745,7 @@ namespace asterisk
                 else
                 {
                     std::vector<Field> online_comm_to_party_recv(last_party_comm);
-                    network_->recv(pid, online_comm_to_party_recv.data(), sizeof(Field) * last_party_comm);
+                    network_->recv(pid, online_comm_to_party_recv.data(), FIELDSIZE * last_party_comm);
                     for (size_t i = 0; i < last_party_comm; i++)
                     {
                         agg_values_send_last[i] += online_comm_to_party_recv[i];
@@ -761,11 +761,11 @@ namespace asterisk
                 }
                 if (id_ != nP_)
                 {
-                    network_->send(pid, agg_values_send.data(), sizeof(Field) * per_party_comm);
+                    network_->send(pid, agg_values_send.data(), FIELDSIZE * per_party_comm);
                 }
                 else
                 {
-                    network_->send(pid, agg_values_send_last.data(), sizeof(Field) * last_party_comm);
+                    network_->send(pid, agg_values_send_last.data(), FIELDSIZE * last_party_comm);
                 }
             }
 
@@ -793,7 +793,7 @@ namespace asterisk
                 if (pid != nP_)
                 {
                     std::vector<Field> agg_values_recv(per_party_comm);
-                    network_->recv(pid, agg_values_recv.data(), sizeof(Field) * per_party_comm);
+                    network_->recv(pid, agg_values_recv.data(), FIELDSIZE * per_party_comm);
                     for (size_t i = 0; i < per_party_comm; i++)
                     {
                         agg_values[(pid - 1) * per_party_comm + i] += agg_values_recv[i];
@@ -802,7 +802,7 @@ namespace asterisk
                 else
                 {
                     std::vector<Field> agg_values_recv(last_party_comm);
-                    network_->recv(pid, agg_values_recv.data(), sizeof(Field) * last_party_comm);
+                    network_->recv(pid, agg_values_recv.data(), FIELDSIZE * last_party_comm);
                     for (size_t i = 0; i < last_party_comm; i++)
                     {
                         agg_values[(pid - 1) * per_party_comm + i] += agg_values_recv[i];
@@ -894,25 +894,25 @@ namespace asterisk
                     case common::utils::GateType::kMul:
                     {
                         auto *g = static_cast<common::utils::FIn2Gate *>(gate.get());
-                        randomizeZZp(prg, rho[g->out], sizeof(Field));
+                        randomizeZZp(prg, rho[g->out], FIELDSIZE);
                         omega += rho[g->out] * (q_val_[g->out] * key - q_sh_[g->out].tagAt());
                     }
                     case common::utils::GateType::kDotprod:
                     {
                         auto *g = static_cast<common::utils::SIMDGate *>(gate.get());
-                        randomizeZZp(prg, rho[g->out], sizeof(Field));
+                        randomizeZZp(prg, rho[g->out], FIELDSIZE);
                         omega += rho[g->out] * (q_val_[g->out] * key - q_sh_[g->out].tagAt());
                     }
                     case common::utils::GateType::kMul3:
                     {
                         auto *g = static_cast<common::utils::FIn3Gate *>(gate.get());
-                        randomizeZZp(prg, rho[g->out], sizeof(Field));
+                        randomizeZZp(prg, rho[g->out], FIELDSIZE);
                         omega += rho[g->out] * (q_val_[g->out] * key - q_sh_[g->out].tagAt());
                     }
                     case common::utils::GateType::kMul4:
                     {
                         auto *g = static_cast<common::utils::FIn4Gate *>(gate.get());
-                        randomizeZZp(prg, rho[g->out], sizeof(Field));
+                        randomizeZZp(prg, rho[g->out], FIELDSIZE);
                         omega += rho[g->out] * (q_val_[g->out] * key - q_sh_[g->out].tagAt());
                     }
                     case common::utils::GateType::kConstAdd:
@@ -925,7 +925,7 @@ namespace asterisk
                     }
                 }
             }
-            network_->send(0, &omega, sizeof(Field));
+            network_->send(0, &omega, FIELDSIZE);
         }
         else
         {
@@ -933,18 +933,18 @@ namespace asterisk
 
             for (int i = 1; i <= nP_; i++)
             {
-                network_->recv(i, &omega, sizeof(Field));
+                network_->recv(i, &omega, FIELDSIZE);
                 res += omega;
             }
 
             for (int i = 1; i <= nP_; i++)
             {
-                network_->send(i, &res, sizeof(Field));
+                network_->send(i, &res, FIELDSIZE);
             }
         }
         if (id_ != 0)
         {
-            network_->recv(0, &res, sizeof(Field));
+            network_->recv(0, &res, FIELDSIZE);
         }
 
         if (res == 0)
@@ -976,14 +976,14 @@ namespace asterisk
             }
             for (int i = 1; i <= nP_; ++i)
             {
-                network_->send(i, output_masks.data(), output_masks.size() * sizeof(Field));
+                network_->send(i, output_masks.data(), output_masks.size() * FIELDSIZE);
             }
             return outvals;
         }
         else
         {
             std::vector<Field> output_masks(circ_.outputs.size());
-            network_->recv(0, output_masks.data(), output_masks.size() * sizeof(Field));
+            network_->recv(0, output_masks.data(), output_masks.size() * FIELDSIZE);
             for (size_t i = 0; i < circ_.outputs.size(); ++i)
             {
                 Field outmask = output_masks[i];
@@ -999,7 +999,7 @@ namespace asterisk
         Field reconstructed_value = Field(0);
         if (id_ != 0)
         {
-            network_->send(0, &shares.valueAt(), sizeof(Field));
+            network_->send(0, &shares.valueAt(), FIELDSIZE);
         }
         else if (id_ == 0)
         {
@@ -1007,7 +1007,7 @@ namespace asterisk
             for (size_t i = 1; i <= nP_; ++i)
             {
                 std::vector<Field> share_val;
-                network_->recv(i, &share_val[i], sizeof(Field));
+                network_->recv(i, &share_val[i], FIELDSIZE);
                 reconstructed_value += share_val[i];
             }
         }
