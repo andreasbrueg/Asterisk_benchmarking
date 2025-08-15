@@ -1,3 +1,14 @@
+#
+
+Steps for benchmarking
+
+```sh
+mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=clang++ ..
+make benchmarks
+```
+
+
 # Asterisk
 
 This directory contains the implementation of the Asterisk fair protocol.

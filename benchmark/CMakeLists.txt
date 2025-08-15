@@ -13,6 +13,7 @@ add_benchmark(Darkpool_CDA)
 add_benchmark(asterisk_mpc)
 add_benchmark(asterisk_online)
 add_benchmark(asterisk_offline)
+add_benchmark(asterisk_comparison)
 add_benchmark(assistedmpc_offline)
 
 add_custom_target(benchmarks)
