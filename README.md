@@ -1,13 +1,31 @@
-#
+# Fixed Asterisk for Comparison
 
-Steps for benchmarking
+**This is a version of Asterisk with minor fixes and changes to run benchmarks for a fair comparison.**
+
+Quick information how to run our benchmarks after installing all requirements:
 
 ```sh
-mkdir build && cd build
+mkdir build
+cd build
 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=clang++ ..
-make benchmarks
+make -j8 benchmarks
+cd benchmarks
+
+# Increase network buffer sizes (remember to first output your current values to later reset to this if not using inside of a container)
+sudo sysctl -w net.core.wmem_max=2129920 &
+sudo sysctl -w net.core.rmem_max=2129920 &
+sudo sysctl -w net.ipv4.tcp_rmem='40960 1310720 62914560' &
+sudo sysctl -w net.ipv4.tcp_wmem='40960 163840 41943040'
+
+# Use LAN or WAN depending on the desired network setting
+sudo python3 network.py start 31 [LAN/WAN]
+
+# This will take a while...
+nohup sudo ./benchmark_asterisk.sh &
+# Results will be written to files in build/benchmarks/p[i] for party i, party 0 is the dealer
 ```
 
+For the exact requirements etc., please refer to the original Asterisk readme appended below:
 
 # Asterisk
 
